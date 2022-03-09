@@ -1,7 +1,7 @@
 /// <reference types="Cypress" />
 
-describe('My First Test Suite', () => {
-    it('My First Test Case', () => {
+describe('My Second Test Suite', () => {
+    it('My Second Test Case', () => {
         cy.visit('http://rahulshettyacademy.com/seleniumPractise/#/')
         // cy.get('input.search-keyword').type('Cucumber')
         // cy.get('button.search-button').click()
@@ -21,29 +21,26 @@ describe('My First Test Suite', () => {
         cy.visit('http://rahulshettyacademy.com/seleniumPractise/#/')
         cy.get('input.search-keyword').type('ca')
         cy.get('button.search-button').click()
-        //cy.pause()
-        // cy.get('h4.product-name').should('have.length', 4).as('productNames')
+        cy.wait(1000)
 
-        // cy.get('@productNames').each(($el) => {
-        //     let vegName = $el.text()
-        //     if (vegName.includes('Cashews')) {
-        //         cy.wrap($el).closest('.button').click()
-        //     }
-        // })
-
-        // cy.get('.product:visible').each(($el, index, $list) => {
-
-        cy.wait(2000)
-        cy.get('.products').find('.product').each(($el, index, $list) => {
-
+        cy.get('.products').as('productsLocator')
+        cy.get('@productsLocator').find('.product').each(($el, index, $list) => {
             let textVeg = $el.find('h4.product-name').text()
             if (textVeg.includes('Cashews')) {
                 cy.wrap($el).find('.product-action>button').click()
-                // cy.wrap($el).closest('.button').click()
             }
         })
-        cy.get('.brand').should('have.text', 'GREENKART').then((logo) => {
-            cy.log(logo.text())
-        })
+
+        cy.get('.cart-icon > img').click()
+
+        cy.contains('PROCEED TO CHECKOUT').click()
+        cy.wait(1000)
+        cy.get(':nth-child(14)').click()
+
+        cy.get('select').select('United States')
+
+        cy.get('.chkagree').click()
+
+        cy.get(':nth-child(14)').click()
     })
 })
