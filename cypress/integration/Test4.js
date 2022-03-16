@@ -19,10 +19,7 @@ describe('My Fourth Test Suite', () => {
         cy.get('#autocomplete').type('ind')
         cy.get('.ui-menu-item div').should('have.length', 3)
             .each(($el, index, $list) => {
-                if ($el.text() === 'India') {
-                    // $el.click()
-                    cy.wrap($el).click()
-                }
+                if ($el.text() === 'India') { cy.wrap($el).click() }
             })
         cy.get('#autocomplete').should('have.value', 'India')
     })
@@ -67,14 +64,14 @@ describe('My Fourth Test Suite', () => {
         })
     })
 
-    it('Web Tables', () => {
-        // my best version
+    xit('Web Tables', () => {
+        // best version
         cy.get('#product').scrollIntoView().find('td')
             .filter(':contains("Master Selenium Automation in simple Python Language")')
             .next().should('contain', '25')
 
-        // my better version of rahul shetty's code
-        cy.get('#product').scrollIntoView().find('td:nth-child(2)').each(($el) => {
+        // better version
+        cy.get('#product').find('td:nth-child(2)').each(($el) => {
             let text = $el.text()
             if (text.includes('Master Selenium Automation in simple Python Language')) {
                 cy.wrap($el).next().should('contain', '25')
@@ -82,7 +79,7 @@ describe('My Fourth Test Suite', () => {
         })
 
         // rahul shetty's code
-        cy.get('tr td:nth-child(2)').each(($el, index, $list) => {
+        cy.get('tr td:nth-child(2)').each(($el, index) => {
             const text = $el.text()
             if (text.includes("Python")) {
                 cy.get("tr td:nth-child(2)").eq(index).next().then(function (price) {
@@ -91,5 +88,33 @@ describe('My Fourth Test Suite', () => {
                 })
             }
         })
+    })
+
+    xit('Mouseover using JQuery', () => {
+        // show needs to be used on the immediate parent of hidden element
+        // experiemented with JQuery attr(attribute,value)
+        // cy.get('div.mouse-hover-content').invoke('attr', 'display,inline').contains('Top').click()
+        // best
+        cy.get('div.mouse-hover-content').invoke('show').contains('Top').click()
+        cy.get('a[href="#top"]').click({ force: true })
+        cy.get('div.mouse-hover').children('div').invoke('show').contains('Top').click()
+        cy.get('#mousehover').next().invoke('show').contains('Top').click()
+
+        cy.url().should('include', '#top')
+    })
+
+    it('Grab HREF attribute', () => {
+        // cy.wrap({ href: 'https://www.rahulshettyacademy.com/' }).its('href').should('exist').then((link) => { cy.visit(link) })
+        cy.get('#opentab').invoke('attr', 'href').should('contain', 'rahulshettyacademy.com')
+        cy.get('#opentab').should('have.attr', 'href', 'https://www.rahulshettyacademy.com/')
+        // cy.get('#opentab').its('href', '{ log : true }').should('contain', 'rahulshettyacademy.com')
+        //      cy.get('#opentab').its('href').should('exist')
+        //  cy.get('#opentab').its('href').should('eqexist')
+
+
+        // cy.get('#opentab').then(($el) => {
+        //     const url2 = $el.prop('href')
+        //     cy.log(url2)
+        //     cy.visit(url2)
     })
 })
